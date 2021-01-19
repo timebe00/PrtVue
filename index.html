@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+    <div id="app">
+        <!--ref : 이 요소를 이것으로 참조하겠다.-->
+        <!--ex) ref="div" 이 요소를 div로 참조하겠다.-->
+        <div ref="aasdfa">{{msgA}}</div>
+        <!--v-once : 한번만 데이터 넣기 가능-->
+        <!--데이터 못 바꿈-->
+        <div v-once>{{msgA}}</div>
+        <div v-html="msgA"></div>
+        <button v-on:click="changeMessage()">Change</button>
+        <!--{{안에는 자바스크립트 표현식 가능}}-->
+        <div>{{ number+2 }}</div>
+        <!--@ == v-on:-->
+        <div :class="className" @click="changeClassName">{{msgA}}</div>
+        <div v-for="todo in computedTodos" :key="todo.id"><input type="checkbox" v-model="todo.done"/>{{todo.title}}</div>
+        <div>{{reverMsg()}}</div>
+        <hr/>
+        <div>{{reversedMsg}}</div>
+        <hr/>
+        <div>{{msg}}</div>
+        <div>{{reversedMsg}}</div>
+        <div>
+            <div 
+                v-if="colorState==='red'" 
+                class="box box--red"></div>
+            <div 
+                v-else-if = "colorState=== 'blue'"
+                class="box box--blue"></div>
+            <div 
+                v-else
+                class="box box--gray"></div>
+        </div>
+        <hr/>
+        <button @click="toggle">Toggle</button>
+        <div class="boxA" v-show="show"></div>
+    </div>
+
+    <script>
+        const vm = new Vue({
+            el:'#app',
+            //  데이터 미 적용시 반응 X
+            data: {
+                msg: "Message",
+                msgA: "Message A. </br> A-1",
+                number: 2,
+                className: 'normal',
+                todos: [
+                    { title: '아침'},
+                    { title: '점심'},
+                    { title: '저녁'},
+                ],
+                colorState: 'red',
+                show: true
+            },
+            methods: {
+                changeMessage () {
+                    this.msgA = "변경"                    
+                },
+                changeClassName () {
+                    this.className = 'active'
+                },
+                reverMsg () {
+                    return this.msg.split('').reverse().join('')
+                },
+                toggle () {
+                    this.show = !this.show
+                }
+            },
+            watch: {
+                //  msgA가 변경 될 때 마다 호출
+                msgA(value) {
+                    console.log("A")
+                }
+            },
+            mounted() {
+                console.log(this.$refs.aasdfa)
+            },
+            //  캐싱 후 출력함
+            computed: {
+                //  지정된 함수 재 지정
+                computedTodos () {
+                    return this.todos.map((todo, index) => {
+                        // return Object.assign({}, todo, {
+                        //     id: index + 1,
+                        //     done: false
+                        // })
+                        return {
+                            ...todo,
+                            id: index + 1,
+                            done: false
+                        }                        
+                    })
+                },
+                reversedMsg: {
+                    //  getter
+                    get () {
+                        return this.msg.split('').reverse().join('')
+                    },
+                    //  setter
+                    set (newValue) {
+                        this.msg = newValue
+                    }
+                }
+                // reversedMsg() {
+                //     return this.msg.split('').reverse().join('')
+                // }
+            },
+            watch: {
+                msg (newMsg) {
+                    console.log('New data :' + newMsg)
+                },
+                reversedMsg (newMsg) {
+                    console.log('New reverseMsg' + newMsg)
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+
+<style>
+    .normal {
+        color: blue
+    }
+    .active {
+        color: red
+    }
+    .box {
+        width: 100px;
+        height: 100px;
+    }
+    .box--red {
+        background-color:  red;
+    }
+    .box--blue {
+        background-color:  blue;
+    }
+    .box--gray {
+        background-color:  gray;
+    }
+    .boxA {
+        width: 100px;
+        height: 100px;
+        background-color: greenyellow;
+    }
+</style>

@@ -42,14 +42,45 @@
         <hr/>
         <button @click="toggle">Toggle</button>
         <div class="boxA" v-show="show"></div>
+        <hr/>
+        <button @click="pushTodo()">Push</button>
+        <ul>
+            <li 
+                v-for="(todo, index) in todos" 
+                :key="index" 
+                @click="clickMethod1(todo.title, $event); clickMethod2(todo.title)">
+                {{todo.title}}
+            </li>
+        </ul>
+        <button @click="addHomepage">add heropy</button>
+        <ul class="heropy">
+            <li 
+                v-for="(v, key, index) in heropy"
+                :key = "index">
+                {{ v }}
+            </li>
+        </ul>
+        <hr />
+        <div class="parent" @click="clickHandler">
+            <div class="child" @click="clickHandler"></div>
+        </div>
+        <hr/>
+        <input type="text" @keydown.ctrl.enter="keydownHandler"/>
+        <hr/>
+        <input type="text" :value="msg" @input="bindMessage"/>
+        <div>{{msg}}</div>
+        <hr/>
+        <input type="text" v-model.lazy.number="msg2"/>
+        <div>{{msg2}}</div>
     </div>
-
+    <!-- 객체데이터는 (원본 , key, index) 순으로 나온다. -->
     <script>
         const vm = new Vue({
             el:'#app',
             //  데이터 미 적용시 반응 X
             data: {
                 msg: "Message",
+                msg2: 1,
                 msgA: "Message A. </br> A-1",
                 number: 2,
                 className: 'normal',
@@ -59,7 +90,11 @@
                     { title: '저녁'},
                 ],
                 colorState: 'red',
-                show: true
+                show: true,
+                heropy: {
+                    name: 'HEROPY',
+                    age: 30
+                }
             },
             methods: {
                 changeMessage () {
@@ -73,6 +108,31 @@
                 },
                 toggle () {
                     this.show = !this.show
+                },
+                pushTodo () {
+                    // this.todos.push({title: '야식'})
+                    // Vue.set(this.todos, 3, {title:'야식!'})
+                    this.$set(this.todos, 3, {title:'야식!'})
+                },
+                addHomepage () {
+                    this.$set(this.heropy, 'homepage', 'herpoy.blog')
+                },
+                clickMethod1 (title, event) {
+                    console.log('clickMethod1')
+                    // console.log(title)
+                    // console.log(event)
+                },
+                clickMethod2 (title, event) {
+                    console.log('clickMethod2')
+                },
+                clickHandler (event) {
+                    console.log(event.currentTarget.className)
+                },
+                keydownHandler (event) {
+                    console.log("Done!")
+                },
+                bindMessage (event) {
+                    this.msg = event.target.value
                 }
             },
             watch: {
@@ -151,5 +211,15 @@
         width: 100px;
         height: 100px;
         background-color: greenyellow;
+    }
+    .parent {
+        width: 200px;
+        height: 200px;
+        background: blue;
+    }
+    .child {
+        width: 100px;
+        height: 100px;
+        background: red;
     }
 </style>

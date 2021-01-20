@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- <my-component :my-msg="msgA">
+            <div slot="slot1">slt</div>
+            <input/>
+        </my-component> -->
+        <!-- <my-component :my-msg="msgA">
+            <template slot-scope="slotdata">
+                {{slotdata.mySlotData}}
+
+            </template>
+        </my-component> -->
+        <my-component :my-msg="msgA">
+            <template slot-scope="{mySlotData}">
+                {{mySlotData}}
+            </template>
+        </my-component>
+    </div>
+    <!-- <div id="app2">
+        <my-comp/>
+    </div> -->
+    <script>
+        Vue.component('my-component', {
+            // template: '<div class = "me">{{ myMsg }}</div>',
+            // template: '<div class = "me"><slot name="slot1">slot디폴트값</slot><slot>slot디폴트값2</slot></div>',
+            // template: '<div><slot my-slot-data="Hi"></slot></div>',
+            template: '<div><slot :my-slot-data="message"></slot></div>',
+            data: function () {
+                return{
+                    message:'Hello Vue!'
+                }
+            },
+            props: {
+                myMsg: {
+                    type: [String, Number],
+                    //  기본 값
+                    default: 'def!',
+                    // 필수?
+                    required: true,
+                    //  유효성 검사
+                    validator (v) {
+                        return v === 'Hi'
+                    }
+                }
+            }
+        })
+
+        // const myComp = {
+        //     template: '<div class = "me">{{ message }}</div>',
+        //     data: function () {
+        //         return{
+        //             message:'Hello Vue!'
+        //         }
+        //     }
+        // }
+
+        const vm = new Vue({
+            el: '#app',
+            // components: {
+            //     'my-component': myComp
+            // }
+            data () {
+                return {
+                    msgA: 'Hi'
+                }
+            }
+        })
+
+        // const vm2 = new Vue({
+        //     el:'#app2',
+        //     components: {
+        //         myComp
+        //     }
+        // })
+    </script>
+</body>
+</html>
